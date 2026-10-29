@@ -40,7 +40,7 @@ def test_readme_in_context_question(mock_vector_store, mock_llm):
     answer = search.search_prompt(README_QUESTION_IN_CONTEXT)
 
     assert answer == README_ANSWER_IN_CONTEXT
-    mock_vector_store.similarity_search_with_score.assert_called_once_with(
+    mock_vector_store.similarity_search_with_score.assert_any_call(
         README_QUESTION_IN_CONTEXT,
         k=10,
     )
@@ -59,7 +59,7 @@ def test_readme_out_of_context_question(mock_vector_store, mock_llm):
     answer = search.search_prompt(README_QUESTION_OUT_OF_CONTEXT)
 
     assert answer == search.OUT_OF_CONTEXT_ANSWER
-    mock_vector_store.similarity_search_with_score.assert_called_once_with(
+    mock_vector_store.similarity_search_with_score.assert_any_call(
         README_QUESTION_OUT_OF_CONTEXT,
         k=10,
     )

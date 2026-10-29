@@ -145,7 +145,48 @@ Para atualizar `requirements.txt` após mudar dependências:
 uv export --no-dev --no-hashes --no-annotate -o requirements.txt
 ```
 
-Configure `OPENAI_API_KEY` (ou `GOOGLE_API_KEY` com variáveis de provider Gemini em `search.py` / `.env` conforme sua escolha).
+Configure `OPENAI_API_KEY`, **Ollama local** (abaixo) ou `GOOGLE_API_KEY` (Gemini).
+
+## LLM local (Ollama)
+
+Roda **embeddings + chat** na máquina, sem OpenAI. Usa [Ollama](https://ollama.com/) via `langchain-ollama`.
+
+1. Suba Postgres e Ollama:
+
+```bash
+docker compose up -d
+docker compose --profile local-llm up -d
+```
+
+2. Baixe os modelos (primeira vez; pode demorar):
+
+```bash
+docker exec ollama_rag ollama pull llama3.2
+docker exec ollama_rag ollama pull nomic-embed-text
+```
+
+Se o Ollama estiver instalado no macOS (app nativa), pule o container e use `ollama pull ...` no host.
+
+3. Configure o `.env`:
+
+```env
+USE_LOCAL_LLM=true
+LLM_PROVIDER=ollama
+EMBEDDINGS_PROVIDER=ollama
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_LLM_MODEL=llama3.2
+OLLAMA_EMBEDDING_MODEL=nomic-embed-text
+```
+
+4. **Reingira** o PDF se você já tinha vetores de outro provedor (dimensões diferentes):
+
+```bash
+docker compose down -v && docker compose up -d
+docker compose --profile local-llm up -d
+uv run python src/ingest.py
+```
+
+Modelos menores (mais rápidos): `llama3.2:1b` no lugar de `llama3.2`.
 
 ## Ordem de execução
 
@@ -175,5 +216,6 @@ Cenários do **Exemplo no CLI** do README (com mocks de pgVector/LLM, sem API ke
 uv run pytest
 ```
 
+## Entregável
 
 Repositório público no GitHub contendo todo o código-fonte e README com instruções claras de execução do projeto.
