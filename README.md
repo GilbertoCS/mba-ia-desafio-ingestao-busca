@@ -167,6 +167,13 @@ uv run python src/ingest.py
 uv run python src/chat.py
 ```
 
-## Entregável
+## Testes
+
+Cenários do **Exemplo no CLI** do README (com mocks de pgVector/LLM, sem API key):
+
+```
+uv run pytest
+```
+
 
 Repositório público no GitHub contendo todo o código-fonte e README com instruções claras de execução do projeto.
